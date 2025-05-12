@@ -1,1 +1,680 @@
-To be updated.
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description"
+        content="STRIVE: Structured Representation Integrating VLM Reasoning for Efficient Object Navigation">
+    <meta name="keywords" content="Robot Object Navigation, Vision-Language Models, Reasoning">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>STRIVE</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-PYVRSFMDRL');
+    </script>
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+    <link rel="stylesheet" href="./static/css/bulma.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+    <link rel="icon" href="./static/images/favicon.svg">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script>
+    <script src="./static/js/index.js"></script>
+</head>
+
+<style>
+    .video-container {
+        width: 30%;
+        /* 每个容器宽度为页面宽度的32%，根据实际情况调整 */
+        display: inline-block;
+        /* 使容器并列排列 */
+        margin: 1%;
+        /* 添加外边距 */
+        vertical-align: top;
+    }
+
+    video {
+        width: 90%;
+        /* 视频宽度填满容器 */
+        display: inline-block;
+        /* 确保视频占满整个容器宽度 */
+        margin: 0 auto;
+        /* 视频居中 */
+    }
+
+    .description {
+        text-align: center;
+        /* 文字居中对齐 */
+    }
+
+    .scale-image {
+        width: 80%;
+        /* 设定特定图片的宽度 */
+        height: auto;
+        /* 保持宽高比 */
+        transition: transform 0.3s ease;
+        /* 添加动画过渡效果 */
+    }
+
+    .text-image-container {
+        display: flex;
+        /* 使用弹性盒模型布局 */
+        align-items: flex-start;
+        /* 上端对齐 */
+        justify-content: center;
+    }
+
+    ul {
+        text-align: justify;
+        /* 确保文本左对齐 */
+        list-style-position: inside;
+        /* 列表标记与文本对齐 */
+        font-size: 16px;
+        list-style-type: circle;
+        /* 使用圆形作为项目符号 */
+
+    }
+</style>
+
+<body>
+
+    <!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-2 publication-title">STRIVE: Structured Representation Integrating VLM
+                            Reasoning for
+                            Efficient Object Navigation</h1>
+                        <!-- <div class="is-size-5 publication-authors">
+                            <span class="author-block">
+                                <a href="https://zwandering.github.io/">Haokun Zhu</a><sup>1 *</sup>,</span>
+                            <span class="author-block">
+                                <a href="https://github.com/igzat1no">Zongtai Li</a><sup>1 *</sup>,</span>
+                            <span class="author-block">
+                                <a href="https://ariannaliu.github.io/">Zhixuan Liu</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="http://www.wangwenshan.com/">Wenshan Wang</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://frc.ri.cmu.edu/~zhangji/">Ji Zhang</a><sup>1</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://jonfranc.com/">Jonathan Francis</a><sup>1,2</sup>,
+                            </span>
+                            <span class="author-block">
+                                <a href="https://www.cs.cmu.edu/~jeanoh/">Jean Oh</a><sup>1</sup>
+                            </span>
+                        </div>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block"><sup>1</sup>Carnegie Mellon University,</span>
+                            <span class="author-block"><sup>2</sup>Bosch Center for AI</span>
+                        </div> -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- <section class="section" id="paper-video">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <video controls width="100%">
+            <source src="./static/videos/video_0.84.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered has-text-centered">
+                    <div class="column is-four-fifths">
+                        <div class="content">
+                            <div class="text-image-container title is-3"
+                                style="display: flex; align-items: center; justify-content: center;">
+                                <img src="static/images/light-bulb.png" alt="示例图片" width="45"
+                                    style="margin-right: 10px;">
+                                <p style="margin: 0;">Contributions</p>
+                            </div>
+                            <ul>
+                                <li style="text-align: left; margin-bottom: 15px;"><b>We propose a framework that
+                                        incrementally builds a
+                                        structured representation of the environment, enabling the VLM to make
+                                        more informed decisions.</b></li>
+                                <li style="text-align: left; margin-bottom: 15px;"><b>We design an efficient two-stage
+                                        navigation policy
+                                        based on this representation, combining high-level planning guided by the VLM's
+                                        reasoning and
+                                        low-level exploration with VLM's assistance.</b></li>
+                                <li style="text-align: left; margin-bottom: 0px;"><b>STRIVE achieves state-of-the-art
+                                        performance on simulated
+                                        benchmarks (HM3D, RoboTHOR, MP3D) and shows strong performance in
+                                        diverse and complex real-world environments. </b></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="paper-video">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full">
+                    <h2 class="title is-3">Video</h2>
+                    <div class="publication-video" style="width: 95%; margin: 0 auto;">
+                        <video controls width="100%">
+                            <source src="./static/videos/video_0.84_720p.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- <section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths has-text-centered">
+        <figure class="image"></figure>
+          <img src="static/images/teaser.png" alt="Sample Image" style="width: 100%; height: auto; aspect-ratio: auto;">
+        </figure>
+        <p class="is-size-6"><strong>STRIVE</strong> can conduct zero-shot object navigation in diverse and complex real-world environments by leveraging our novel multi-layer representation and 2-stage efficient navigation policy.</p>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+    <!-- <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
+        free-viewpoint
+        portraits.
+      </h2>
+    </div>
+  </div>
+</section> -->
+
+
+
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <!-- Abstract. -->
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Abstract</h2>
+                    <div class="content has-text-justified">
+                        <p></p>
+                        We propose a novel framework that constructs a multi-layer representation of the environment
+                        during
+                        navigation.
+                        This representation consists of viewpoint, object nodes, and room nodes.
+                        Viewpoints and object nodes facilitate intra-room exploration and accurate target localization,
+                        while room
+                        nodes support
+                        efficient inter-room planning. Building on this representation, we propose a novel
+                        two-stage navigation policy, integrating high-level planning guided by VLM rea-
+                        soning with low-level VLM-assisted exploration to efficiently locate a goal object.
+                        </p>
+                        <p>
+                            We evaluated our approach on three simulated benchmarks (HM3D, RoboTHOR,
+                            and MP3D), and achieved state-of-the-art performance on both the success rate
+                            (↑ 7.1%) and navigation efficiency (↑ 12.5%). We further validate our method on
+                            a real robot platform, demonstrating strong robustness across 15 object navigation
+                            tasks in 10 different indoor environments.
+                        </p>
+                        <!-- <p>
+            We present the first method capable of photorealistically reconstructing a non-rigidly
+            deforming scene using photos/videos captured casually from mobile phones.
+          </p>
+          <p>
+            Our approach augments neural radiance fields
+            (NeRF) by optimizing an
+            additional continuous volumetric deformation field that warps each observed point into a
+            canonical 5D NeRF.
+            We observe that these NeRF-like deformation fields are prone to local minima, and
+            propose a coarse-to-fine optimization method for coordinate-based models that allows for
+            more robust optimization.
+            By adapting principles from geometry processing and physical simulation to NeRF-like
+            models, we propose an elastic regularization of the deformation field that further
+            improves robustness.
+          </p>
+          <p>
+            We show that <span class="dnerf">Nerfies</span> can turn casually captured selfie
+            photos/videos into deformable NeRF
+            models that allow for photorealistic renderings of the subject from arbitrary
+            viewpoints, which we dub <i>"nerfies"</i>. We evaluate our method by collecting data
+            using a
+            rig with two mobile phones that take time-synchronized photos, yielding train/validation
+            images of the same pose at different viewpoints. We show that our method faithfully
+            reconstructs non-rigidly deforming scenes and reproduces unseen views with high
+            fidelity.
+          </p> -->
+                    </div>
+                </div>
+            </div>
+            <!--/ Abstract. -->
+
+
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column is-four-fifths-desktop has-text-centered">
+                    <h2 class="title is-3">Method Overview</h2>
+                    <figure class="image">
+                        <img src="./static/images/pipeline_4.png" alt="Sample Image" style="width: 100%; height: auto;">
+                    </figure>
+                    <p class="is-size-6" style="text-align: left;"><strong>Overview of STRIVE.</strong> We construct a
+                        multi-layer representation R on-the-fly, consisting of object, viewpoint, and room nodes, which
+                        serves as a structured input for VLM. Based on R, we introduce a two-stage navigation policy,
+                        where the VLM reasons and plans at room-level, while the agent explores in room at the
+                        viewpoint-level using a VLM-assisted frontier-based navigation strategy and VLM-based target
+                        verification.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column is-four-fifths-desktop has-text-centered">
+                    <h2 class="title is-3">Benchmark Results</h2>
+                    <figure class="image">
+                        <img src="./static/images/table1.png" alt="Sample Image" style="width: 100%; height: auto;">
+                    </figure>
+                    <p class="is-size-6" style="text-align: left;"><strong>Comparison with SOTA methods with different
+                            settings on HM3D, RoboTHOR, and MP3D
+                            datasets.</strong> We report the Success Rate (SR) and Success weighted by Path Length (SPL)
+                        metrics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column is-four-fifths-desktop has-text-centered">
+                    <h2 class="title is-3">Benchmark Results</h2>
+                    <figure class="image">
+                        <img src="./static/images/qualatative_00.png" alt="Sample Image"
+                            style="width: 100%; height: auto;">
+                    </figure>
+                    <p class="is-size-6" style="text-align: left;"><strong>Qualitative visualization of STRIVE.</strong>
+                        The first and second steps show the VLM’s reasoning process, where it selects Room
+                        6 and 9 by jointly considering room-layout ('doorway'),
+                        semantic cues ('nightstand') and travel cost (penalized distance). The final step shows
+                        VLM-based
+                        verification, using contextual cues (e.g., mattress, pillows) to confirm the target object as a
+                        ‘bed’.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop has-text-centered">
+                <h2 class="title is-3">Real-world Experiments</h2>
+                <div id="results-carousel-teaser1" class="carousel results-carousel">
+
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/real_world/real_world_hard_robo_table_ori.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/real_world/real_world_hard_cic_ref_ori.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video18">
+                        <video poster="" id="video18" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/real_world/real_world_hard_robo_ref_ori.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--  -->
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop has-text-centered">
+                <h2 class="title is-3">Experiments on HM3D</h2>
+                <div id="results-carousel-teaser1" class="carousel results-carousel">
+
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-0.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-5.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-7.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-11.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-12.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-13.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-14.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-15.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-16.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-31.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/hm3d/episode-32.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop has-text-centered">
+                <h2 class="title is-3">Experiments on RoboTHOR</h2>
+                <div id="results-carousel-teaser1" class="carousel results-carousel">
+
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-5.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-6.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-7.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-9.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-10.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-12.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-13.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video17">
+                        <video poster="" id="video17" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/robothor/episode-14.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop has-text-centered">
+                <h2 class="title is-3">Experiments on MP3D</h2>
+                <div id="results-carousel-teaser1" class="carousel results-carousel">
+
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-7.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-8.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-12.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-23.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-27.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-29.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-36.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-37.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-39.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-49.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-55.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item item-video">
+                        <video poster="" id="video16" autoplay playsinline controls muted height="100%">
+                            <source src="./static/videos/mp3d/episode-64.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero is-small">
+        <div class="hero-body">
+            <div class="container is-max-desktop has-text-centered">
+                <h2 class="title is-3">Additional Examples of VLM Reasoning</h2>
+                <div id="vlm-reasoning-carousel" class="carousel results-carousel">
+                    <div class="item">
+                        <img src="./static/images/vlm_reason_1_00.png" alt="Additional Image 1" style="width: 100%; height: auto;">
+                    </div>
+                    <div class="item">
+                        <img src="./static/images/vlm_reason_2_00.png" alt="Additional Image 2" style="width: 100%; height: auto;">
+                    </div>
+                    <div class="item">
+                        <img src="./static/images/vlm_reason_3_00.png" alt="Additional Image 3" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+
+    <!-- <footer class="footer">
+        <div class="columns is-centered">
+            <div class="column is-8 has-text-centered">
+                <div class="content">
+                    Website template based on <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+                </div>
+            </div>
+        </div>
+    </footer> -->
+
+</body>
+
+</html>

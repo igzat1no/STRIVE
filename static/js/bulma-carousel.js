@@ -846,7 +846,8 @@ var bulmaCarousel = function (_EventEmitter) {
       this._transitioner.init().apply(true, this._setHeight.bind(this));
 
       if (this.options.autoplay) {
-        this._autoplay.init().start();
+        // this._autoplay.init().start();
+		this._autoplay.init().stop();
       }
     }
 
@@ -1033,7 +1034,7 @@ var onMouseLeave = Symbol('onMouseLeave');
 
 var defaultOptions = {
 	autoplay: false,
-	autoplaySpeed: 3000
+	autoplaySpeed: 90000
 };
 
 var Autoplay = function (_EventEmitter) {
@@ -1445,6 +1446,7 @@ var Loop = function () {
 	}, {
 		key: "apply",
 		value: function apply() {
+			// this.slider.options.loop = false;
 			if (this.slider.options.loop) {
 				if (this.slider.state.next > 0) {
 					if (this.slider.state.next < this.slider.state.length) {
