@@ -1,0 +1,17 @@
+torch==2.5.1
+torchvision==0.20.1
+opencv-python==4.10.0.84
+open3d==0.19.0
+scikit-image==0.24.0
+supervision==0.26.1
+numpy-quaternion==2023.0.3
+openai==1.109.1
+pydantic==2.10.2
+numpy==1.26.4
+scipy==1.13.1
+networkx==3.2.1
+pathfinding==1.0.9
+bresenham==0.2.1
+matplotlib==3.6.3
+loguru==0.7.3
+tqdm==4.67.1
